@@ -1,0 +1,16 @@
+numpy==1.26.4
+pytorch-lightning==2.5.5
+torch==2.8.0
+torchmetrics==1.8.2
+torch-geometric==2.6.1
+transformers>=4.56.1
+vllm==0.10.2
+accelerate
+func_timeout
+jsonargparse[signatures]
+matplotlib
+python-dotenv
+scikit_learn
+setuptools
+sqlglot
+tensorboard
