@@ -192,6 +192,22 @@ class TripleStreamDataset(Dataset):
                 'sql_attention_mask': sql_texts['attention_mask'],
                 'labels': label_batch
             }
+        elif self.method_name == 'encode':
+            query_texts = [
+                self.question_template.format("None", question)
+                for _, question in zip(schema_texts, question_texts)
+            ]
+            query_batch = self.tokenizer(query_texts, max_length=512, padding=True, truncation=True, return_tensors='pt')
+
+            sql_texts = self.tokenizer(sql_texts, max_length=512, padding=True, truncation=True, return_tensors='pt')
+
+            return {
+                'query_input_ids': query_batch['input_ids'],
+                'query_attention_mask': query_batch['attention_mask'],
+                'sql_input_ids': sql_texts['input_ids'],
+                'sql_attention_mask': sql_texts['attention_mask'],
+                'labels': label_batch
+            }
         elif self.method_name == 'satie':
             schema = self.tokenizer(schema_texts, padding=True, truncation=True, return_tensors='pt')
             question = self.tokenizer(question_texts, padding=True, truncation=True, return_tensors='pt')
@@ -209,6 +225,7 @@ class TripleStreamDataset(Dataset):
 
 def create_dataloader(dataset_name: str, batch_size: int, num_workers: int = 64, mode: str = 'train', method_name: str = "hero", embedding_model_name: str = "Qwen/Qwen3-Embedding-0.6B"):
     assert mode in ['train', 'test']
+    # print("Creating dataloader for dataset:", dataset_name, "mode:", mode, "method:", method_name)
 
     if mode == 'train':
         # load dataset

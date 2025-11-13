@@ -1,3 +1,4 @@
+from .encode import Encode
 from .plain import Plain
 from .satie import Satie
 from .syntax import Syntax

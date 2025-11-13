@@ -3,7 +3,7 @@ import torchmetrics
 import pytorch_lightning as pl
 import torch.nn.functional as F
 
-from src.model import Plain, Satie, Syntax, Lope, Hero
+from src.model import Plain, Encode, Satie, Syntax, Lope, Hero
 
 class TripleFusionLightningModule(pl.LightningModule):
     def __init__(
@@ -69,6 +69,15 @@ class TripleFusionLightningModule(pl.LightningModule):
                 projection_dim=projection_dim,
                 dropout=dropout,
             )
+        elif model_name == "encode":
+            self.model = Encode(
+                embedding_model_name=embedding_model_name,
+                hidden_dim=hidden_dim,
+                projection_dim=projection_dim,
+                dropout=dropout,
+            )
+        else:
+            raise ValueError(f"[error] Unknown model name: {model_name}")
 
     def setup(self, stage):
         # Prepare metrics
