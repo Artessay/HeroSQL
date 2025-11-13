@@ -37,11 +37,6 @@ class Hero(nn.Module):
             dropout=dropout,
         )
         
-        # self.lp_text_projector = nn.Sequential(
-        #     nn.Linear(text_embedding_dim, hidden_dim),
-        #     nn.ReLU(),
-        #     nn.Dropout(dropout),
-        # )
         self.lp_graph_encoder = GATNet(
             input_dim=hidden_dim,
             hidden_dim=hidden_dim,
