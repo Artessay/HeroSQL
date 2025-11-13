@@ -127,17 +127,18 @@ class Satie(nn.Module):
             [token_attention_mask, schema_attention_mask, token_attention_mask, question_attention_mask, token_attention_mask], dim=1
         )
 
-        sequence_length = embedding_input_ids.shape[1]
-        attention_window: int = self.embedding_model.config.attention_window[0]
-        if self.need_padding and sequence_length % attention_window != 0:
-            pad_token_id: int = self.embedding_tokenizer.pad_token_id
-            padding_length = ((sequence_length + attention_window - 1) // attention_window) * attention_window - sequence_length
-            assert padding_length > 0
+        if self.need_padding:
+            sequence_length = embedding_input_ids.shape[1]
+            attention_window: int = self.embedding_model.config.attention_window[0]
+            if sequence_length % attention_window != 0:
+                pad_token_id: int = self.embedding_tokenizer.pad_token_id
+                padding_length = ((sequence_length + attention_window - 1) // attention_window) * attention_window - sequence_length
+                assert padding_length > 0
 
-            padding_input_ids = torch.full((batch_size, padding_length), pad_token_id, dtype=embedding_input_ids.dtype, device=embedding_input_ids.device)
-            padding_attention_mask = torch.zeros((batch_size, padding_length), dtype=embedding_attention_mask.dtype, device=embedding_attention_mask.device)
-            embedding_input_ids = torch.cat([embedding_input_ids, padding_input_ids], dim=1)
-            embedding_attention_mask = torch.cat([embedding_attention_mask, padding_attention_mask], dim=1)
+                padding_input_ids = torch.full((batch_size, padding_length), pad_token_id, dtype=embedding_input_ids.dtype, device=embedding_input_ids.device)
+                padding_attention_mask = torch.zeros((batch_size, padding_length), dtype=embedding_attention_mask.dtype, device=embedding_attention_mask.device)
+                embedding_input_ids = torch.cat([embedding_input_ids, padding_input_ids], dim=1)
+                embedding_attention_mask = torch.cat([embedding_attention_mask, padding_attention_mask], dim=1)
         
         embedding_output = self.embedding_model(
             input_ids=embedding_input_ids,
@@ -152,13 +153,14 @@ class Satie(nn.Module):
 if __name__ == "__main__":
     from src.dataset.triple_stream_dataset import create_dataloader
 
+    embedding_model_name = "microsoft/longcoder-base"
     model = Satie(
-        embedding_model_name = "microsoft/longcoder-base",
+        embedding_model_name = embedding_model_name,
         # debug=True  # Enable timing information
     ).to('cuda')
     model.eval()
 
-    _, _, test_loader = create_dataloader("bird", batch_size=3, mode="test")
+    _, _, test_loader = create_dataloader("bird", batch_size=3, mode="test", method_name="satie", embedding_model_name=embedding_model_name)
     for batch in test_loader:
         with torch.no_grad():
             logits = model(
