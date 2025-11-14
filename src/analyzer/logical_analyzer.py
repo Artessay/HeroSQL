@@ -44,7 +44,11 @@ class LogicalAnalyzer:
         # Record the start time
         start_time = time.perf_counter()
         # Get the logical query plan
-        logical_plan = self.calcite_client.sql_to_logical_plan(db_path, sql, format="xml")
+        try:
+            logical_plan = self.calcite_client.sql_to_logical_plan(db_path, sql, format="xml")
+        except Exception as e:
+            self.logger.error(f"Error getting the logical query plan: {e}\nSQL query: {sql}")
+            return None
         # Record the end time
         end_time = time.perf_counter()
         # Calculate the time taken

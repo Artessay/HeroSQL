@@ -14,13 +14,19 @@ def run(args):
     
     # generate sql list
     model_name = args.model
-    sql_generator = SqlGenerator(model_name, num_samples=32)
+    sql_generator = SqlGenerator(model_name, num_samples=64)
 
     prompt_list = [data['prompt'] for data in data_list]
     responses = sql_generator(prompt_list)
 
     for data, response in zip(data_list, responses):
         data.pop('prompt')
+
+        # add golden sqls into responses for evaluation
+        gt_sql = data['SQL'] if 'SQL' in data else data['query']
+        if gt_sql not in response:
+            response = [gt_sql] + response
+        
         data['sqls'] = response
 
     model_name = model_name.split('/')[-1]

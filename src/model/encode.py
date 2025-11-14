@@ -99,8 +99,9 @@ class Encode(nn.Module):
 if __name__ == "__main__":
     from src.dataset.triple_stream_dataset import create_dataloader
 
-    embedding_model_name = "BAAI/bge-large-en"
+    # embedding_model_name = "BAAI/bge-large-en"
     # embedding_model_name = "thenlper/gte-large"
+    embedding_model_name = "facebook/contriever"
     model = Encode(
         embedding_model_name = embedding_model_name,
     ).to('cuda')

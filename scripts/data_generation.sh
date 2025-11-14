@@ -37,7 +37,7 @@ generate() {
 
     # Validate dataset parameter
     echo "Validating parameters..."
-    if [[ "$DATASET" != "spider" && "$DATASET" != "bird" && "$DATASET" != "ehr" ]]; then
+    if [[ "$DATASET" != "spider" && "$DATASET" != "bird" && "$DATASET" != "ehr" && "$DATASET" != "spider2" ]]; then
         echo "Error: Dataset must be either 'spider' or 'bird', current value: $DATASET"
         exit 1
     fi
@@ -71,5 +71,7 @@ do
         generate "$DATASET" "$MODE"
     done
 done
+
+generate "spider2" "dev"
 
 exit 0

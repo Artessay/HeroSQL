@@ -26,6 +26,9 @@ def load_generate_dataset(dataset_name: str, mode: str):
         # get schema
         if dataset_name == 'ehr':
             database_path = 'data/ehr/mimic_iv.sqlite'
+        elif dataset_name == 'spider2':
+            db_name = item['db_id']
+            database_path = f'data/spider2/databases/{db_name}.sqlite'
         else:
             db_name = item['db_id']
             database_path = f'data/{dataset_name}/{mode}/{mode}_databases/{db_name}/{db_name}.sqlite'

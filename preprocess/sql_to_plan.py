@@ -39,6 +39,7 @@ def run(args):
     data_list, sql_plan_list = zip(*filtered)  # 这里会变成tuple，可以 list() 一下
     data_list = list(data_list)
     sql_plan_list = list(sql_plan_list)
+    print(len(data_list))
 
     # Construct dataset and save to disk
     save_path = f"data/processed/{dataset_name}-{mode}-plan.pt"

@@ -12,8 +12,8 @@ def run(args):
 
     method_name = args.model.model_name
     embedding_model_name = args.model.embedding_model_name.split('/')[-1]
-    embedding_model_abbreviation = 'qwen' if 'qwen' in embedding_model_name.lower() else 'gemma'
-    checkpoint_path = f"./checkpoints/{method_name}/aug_{embedding_model_abbreviation}_{seed}.ckpt"
+    
+    checkpoint_path = f"./checkpoints/{method_name}/aug_{embedding_model_name}_{seed}.ckpt"
     save_path = f'results/{args.dataset.dataset_name}/{embedding_model_name}/aug-{method_name}-{seed}.json'
 
     # if os.path.exists(save_path):
